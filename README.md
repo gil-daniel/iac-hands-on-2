@@ -1,5 +1,8 @@
 # 🧱 IaC Hands-on 2: Linux VM with Modular Azure Bicep
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Status](https://img.shields.io/badge/status-in_progress-blue)
+
 This project provisions a complete Azure environment using **modular Bicep templates** — designed as a hands-on exercise for learning Infrastructure as Code (IaC) practices.
 
 ---
