@@ -63,8 +63,9 @@ ssh yourusername@59.122.XXX.XXX
 ---
 ## 🔐 Security note:
 This project uses `parameters.json`, which is ignored by Git. Clone the example file below to provide your own inputs:
-
+```bash
 cp parameters.example.json parameters.json
+```
 ---
 ## 🛠️ Tech Stack
 * Azure Bicep (modular architecture)
