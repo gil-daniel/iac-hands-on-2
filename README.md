@@ -15,14 +15,16 @@ This project provisions a complete Azure environment using **modular Bicep templ
 
 ## 📁 Project Structure
 
-iac-hands-on-2/ │ 
-├── main.bicep  # Orchestrates all module deployments 
-├── parameters.json # Input parameters (e.g., SSH public key) 
-├── README.md # Project documentation 
-    └── modules/  
-    ├── network.bicep # VNet, Subnet, NSG   
-    ├── nic.bicep # Public IP and NIC   
-    └── vm.bicep  # Virtual Machine deployment  
+```
+iac-hands-on-2/
+├── main.bicep              # Orchestrates all module deployments
+├── parameters.json         # Input parameters (e.g., SSH public key)
+├── README.md               # Project documentation
+└── modules/
+    ├── network.bicep       # VNet, Subnet, NSG
+    ├── nic.bicep           # Public IP and NIC
+    └── vm.bicep            # Virtual Machine deployment
+```
 
 ---
 
