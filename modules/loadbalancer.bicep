@@ -1,11 +1,18 @@
 @description('Load Balancer Name')
 param lbName string = 'lb-hands3'
 
-@description('Subnet ID where the Load Balancer will be deployed')
-param subnetId string
-
 @description('Location')
 param location string = resourceGroup().location
+
+// Optional: remove this param if unused
+// @description('Subnet ID where the Load Balancer will be deployed')
+// param subnetId string
+
+// Reusable names
+var frontendName = 'LoadBalancerFrontEnd'
+var backendPoolName = 'BackendPool'
+var probeName = 'tcpProbe'
+var ruleName = 'http-rule'
 
 resource publicIP 'Microsoft.Network/publicIPAddresses@2023-04-01' = {
   name: '${lbName}-pip'
@@ -28,7 +35,7 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2023-04-01' = {
   properties: {
     frontendIPConfigurations: [
       {
-        name: 'LoadBalancerFrontEnd'
+        name: frontendName
         properties: {
           publicIPAddress: {
             id: publicIP.id
@@ -38,12 +45,12 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2023-04-01' = {
     ]
     backendAddressPools: [
       {
-        name: 'BackendPool'
+        name: backendPoolName
       }
     ]
     probes: [
       {
-        name: 'tcpProbe'
+        name: probeName
         properties: {
           protocol: 'Tcp'
           port: 80
@@ -54,16 +61,16 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2023-04-01' = {
     ]
     loadBalancingRules: [
       {
-        name: 'http-rule'
+        name: ruleName
         properties: {
           frontendIPConfiguration: {
-            id: loadBalancer.properties.frontendIPConfigurations[0].id
+            id: resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', lbName, frontendName)
           }
           backendAddressPool: {
-            id: loadBalancer.properties.backendAddressPools[0].id
+            id: resourceId('Microsoft.Network/loadBalancers/backendAddressPools', lbName, backendPoolName)
           }
           probe: {
-            id: loadBalancer.properties.probes[0].id
+            id: resourceId('Microsoft.Network/loadBalancers/probes', lbName, probeName)
           }
           protocol: 'Tcp'
           frontendPort: 80
@@ -77,5 +84,5 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2023-04-01' = {
   }
 }
 
-output backendPoolId string = loadBalancer.properties.backendAddressPools[0].id
+output backendPoolId string = resourceId('Microsoft.Network/loadBalancers/backendAddressPools', lbName, backendPoolName)
 output publicIp string = publicIP.properties.ipAddress

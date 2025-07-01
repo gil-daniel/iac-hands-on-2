@@ -35,6 +35,12 @@ param adminUsername string = 'azureuser'
 @secure()
 param adminPublicKey string
 
+@description('Base name for the Virtual Machines')
+param vmBaseName string = 'vmweb'
+
+@description('Number of Virtual Machines to deploy')
+param vmCount int = 2
+
 module network './modules/network.bicep' = {
   name: 'deployNetwork'
   params: {
@@ -47,44 +53,41 @@ module network './modules/network.bicep' = {
   }
 }
 
-module nic './modules/nic.bicep' = {
-  name: 'deployNIC'
-  params: {
-    location: location
-    nicName: nicName
-    publicIpName: publicIpName
-    subnetId: network.outputs.subnetId
-  }
-}
+// module nic './modules/nic.bicep' = {
+//   name: 'deployNIC'
+//   params: {
+//     location: location
+//     nicName: nicName
+//     publicIpName: publicIpName
+//     subnetId: network.outputs.subnetId
+//   }
+// }
 
-module vm './modules/vm.bicep' = {
-  name: 'deployVM'
-  params: {
-    location: location
-    vmName: vmName
-    vmSize: vmSize
-    adminUsername: adminUsername
-    adminPublicKey: adminPublicKey
-    nicId: nic.outputs.nicId
-  }
-}
+// module vm './modules/vm.bicep' = {
+//   name: 'deployVM'
+//   params: {
+//     location: location
+//     vmName: vmName
+//     vmSize: vmSize
+//     adminUsername: adminUsername
+//     adminPublicKey: adminPublicKey
+//     nicId: nic.outputs.nicId
+//   }
+// }
 
-// Load Balancer
 module lb './modules/loadbalancer.bicep' = {
   name: 'deployLoadBalancer'
   params: {
     lbName: 'lb-hands3'
-    subnetId: network.outputs.subnetId
     location: location
   }
 }
 
-// Multiple Virtual Machines connected to Load Balancer
 module vmMulti './modules/vm-multi.bicep' = {
   name: 'deployMultiVM'
   params: {
-    vmBaseName: 'vmweb'
-    vmCount: 2
+    vmBaseName: vmBaseName
+    vmCount: vmCount
     vmSize: vmSize
     adminUsername: adminUsername
     adminPublicKey: adminPublicKey
@@ -94,5 +97,4 @@ module vmMulti './modules/vm-multi.bicep' = {
   }
 }
 
-
-output publicIpAddress string = nic.outputs.publicIpAddress
+// output publicIpAddress string = nic.outputs.publicIpAddress
