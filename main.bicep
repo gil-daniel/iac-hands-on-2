@@ -69,4 +69,30 @@ module vm './modules/vm.bicep' = {
   }
 }
 
+// Load Balancer
+module lb './modules/loadbalancer.bicep' = {
+  name: 'deployLoadBalancer'
+  params: {
+    lbName: 'lb-hands3'
+    subnetId: network.outputs.subnetId
+    location: location
+  }
+}
+
+// Multiple Virtual Machines connected to Load Balancer
+module vmMulti './modules/vm-multi.bicep' = {
+  name: 'deployMultiVM'
+  params: {
+    vmBaseName: 'vmweb'
+    vmCount: 2
+    vmSize: vmSize
+    adminUsername: adminUsername
+    adminPublicKey: adminPublicKey
+    subnetId: network.outputs.subnetId
+    backendPoolId: lb.outputs.backendPoolId
+    location: location
+  }
+}
+
+
 output publicIpAddress string = nic.outputs.publicIpAddress
